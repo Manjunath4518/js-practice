@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button><img src="https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/search.png?raw=true"></button>
+        </div>
+    
+        <div class="weather">
+            <img src="https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/rain.png?raw=true" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">Hyderabad</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="/humidity.png">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="/wind.png">
+                    <div>
+                        <p class="wind">16kmh</p>
+                        <p>wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const apiKey = '1251259dd42eb47317b26477f694f87f';
+            const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q=';
+        
+            const searchBox = document.querySelector('.search input');
+            const searchBtn = document.querySelector('.search button');
+            const weatherIcon = document.querySelector('.weather-icon');
+            
+            async function checkWeather(city) {
+                try {
+                    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+                    if (!response.ok) {
+                        throw new Error("Weather data not found!");
+                    }
+                    const data = await response.json();
+                    
+                    // Update HTML with fetched data
+                    document.querySelector(".city").innerHTML = data.name;
+                    document.querySelector(".temp").innerHTML = data.main.temp + "°C";
+                    document.querySelector(".humidity").innerHTML = "Humidity: " + data.main.humidity + "%";
+                    document.querySelector(".wind").innerHTML = "Wind Speed: " + data.wind.speed + " m/s";
+        
+                    // Handle weather icons based on weather type
+                    if (data.weather[0].main === 'Clouds') {
+                        weatherIcon.src = 'https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/clouds.png?raw=true';
+                    } else if (data.weather[0].main === 'Clear') {
+                        weatherIcon.src = 'https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/clear.png?raw=true';
+                    } else if (data.weather[0].main === 'Rain') {
+                        weatherIcon.src = 'https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/rain.png?raw=true';
+                    } else if (data.weather[0].main === 'Drizzle') {
+                        weatherIcon.src = 'https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/drizzle.png?raw=true';
+                    } else if (data.weather[0].main === 'Mist') {
+                        weatherIcon.src = 'https://github.com/saii-Abburi/30-days---30-projects/blob/main/Weather%20-%201/assets/mist.png?raw=true';
+                    }
+
+                    document.querySelector(".weather").style.display='block'
+                } catch (error) {
+                    console.error(error);
+                    document.querySelector(".city").innerHTML = "Error fetching data!";
+                }
+            }
+        
+            searchBtn.addEventListener("click", () => {
+                checkWeather(searchBox.value);
+            });
+        </script>
+        
+
+</div>
+</body>
+</html>
